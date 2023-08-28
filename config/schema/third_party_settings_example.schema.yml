@@ -1,0 +1,7 @@
+node.type.*.third_party.example_settings:
+  type: config_entity
+  label: "Example settings"
+  mapping:
+    text_field:
+      type: text
+      label: "Text Field"

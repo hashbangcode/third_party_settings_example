@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * The third party settings example module file.
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function third_party_settings_example_form_node_type_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $entity = $form_state->getFormObject()->getEntity();
+  if ($entity && $entity->id() === 'article') {
+    $emailSubject = $entity->getThirdPartySetting('third_party_settings_example', 'text_field');
+
+    $form['example_settings'] = [
+      '#type' => 'fieldset',
+      '#tree' => FALSE,
+      '#title' => t('Third Party Example Settings'),
+      '#description' => t('For example purposes.'),
+    ];
+
+    $form['example_settings']['text_field'] = [
+      '#type' => 'textfield',
+      '#title' => t('Subject'),
+      '#default_value' => $emailSubject,
+    ];
+
+    $form['#entity_builders'][] = 'third_party_settings_example_node_form_builder';
+  }
+}
+
+/**
+ * Entity builder for the node:article entity.
+ */
+function third_party_settings_example_node_form_builder($entity_type, $entity, &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  if ($form_state->getValue('text_field')) {
+    $textFieldValue = $form_state->getValue('text_field');
+    $entity->setThirdPartySetting('third_party_settings_example', 'text_field', $textFieldValue);
+    return;
+  }
+  $entity->unsetThirdPartySetting('third_party_settings_example', 'text_field');
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function third_party_settings_example_preprocess_node(&$variables) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['elements']['#node'];
+
+  $variables['third_party_settings_example_text_field'] = $node->type->entity->getThirdPartySetting('third_party_settings_example', 'text_field');
+}
