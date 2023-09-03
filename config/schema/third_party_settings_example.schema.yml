@@ -1,4 +1,4 @@
-node.type.*.third_party.example_settings:
+node.type.*.third_party.third_party_settings_example:
   type: config_entity
   label: "Example settings"
   mapping:
