@@ -48,9 +48,11 @@ function third_party_settings_example_node_form_builder($entity_type, $entity, &
 function third_party_settings_example_preprocess_node(&$variables) {
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['elements']['#node'];
-  $additionalSetting = $node->type->entity->getThirdPartySetting('third_party_settings_example', 'text_field');
+  if ($node->bundle() == 'article') {
+    $additionalSetting = $node->type->entity->getThirdPartySetting('third_party_settings_example', 'text_field');
 
-  $variables['content']['additional_title'] = [
-    '#markup' => $additionalSetting,
-  ];
+    $variables['content']['additional_title'] = [
+      '#markup' => $additionalSetting,
+    ];
+  }
 }
