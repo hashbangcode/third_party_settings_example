@@ -11,7 +11,7 @@
 function third_party_settings_example_form_node_type_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   $entity = $form_state->getFormObject()->getEntity();
   if ($entity && $entity->id() === 'article') {
-    $emailSubject = $entity->getThirdPartySetting('third_party_settings_example', 'text_field');
+    $exampleTextField = $entity->getThirdPartySetting('third_party_settings_example', 'text_field');
 
     $form['example_settings'] = [
       '#type' => 'fieldset',
@@ -22,8 +22,8 @@ function third_party_settings_example_form_node_type_edit_form_alter(&$form, \Dr
 
     $form['example_settings']['text_field'] = [
       '#type' => 'textfield',
-      '#title' => t('Subject'),
-      '#default_value' => $emailSubject,
+      '#title' => t('Example Text Field'),
+      '#default_value' => $exampleTextField,
     ];
 
     $form['#entity_builders'][] = 'third_party_settings_example_node_form_builder';
@@ -48,6 +48,9 @@ function third_party_settings_example_node_form_builder($entity_type, $entity, &
 function third_party_settings_example_preprocess_node(&$variables) {
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['elements']['#node'];
+  $additionalSetting = $node->type->entity->getThirdPartySetting('third_party_settings_example', 'text_field');
 
-  $variables['third_party_settings_example_text_field'] = $node->type->entity->getThirdPartySetting('third_party_settings_example', 'text_field');
+  $variables['content']['additional_title'] = [
+    '#markup' => $additionalSetting,
+  ];
 }
